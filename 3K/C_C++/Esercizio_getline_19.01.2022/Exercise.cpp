@@ -1,30 +1,40 @@
 #include <iostream>
-#include <cctype>
+#include <stdio.h>
+
 using namespace std;
 
-string sentence[225];
-
 int main() {
+    string sentence[255];
 
-    for(int i = 0; i < 255; i++) {
-        cout << "Enter a sentence: ";
-        getline(cin, sentence[i]);
-        string str = sentence[i];
-        string sz = str.size();
-        char ch_arr[sz + 1];
-        strcpy(ch_arr, str.c_str());
+    for (int st = 0; st < 255; st++) {
+
+        char ch_str[100];
+        int words = 1, chars = 0;
+        int i;
+        cout << "[" << st+1 << "]Enter a sentence: ";
+        gets(ch_str);
+        string str(ch_str);
+        sentence[st] = str;
 
 
-        cout << "The sentence is " << str.size() << " characters long" << endl;
-        cout << "The sentence contains " << countWordsInString(&str) << "words" << endl;
 
-        if (sentence[i].find("stop") != string::npos) {
-            i = 300;
+        for (i = 0; ch_str[i] != '\0'; i++){
+            if (ch_str[i]!= ' '){
+                chars++;
+            }
+            else if(ch_str[i]==' ' || ch_str[i] != '\n' || ch_str[i] != '\t'){
+                words++;
+            }
         }
+
+        cout<<"Total words: " << words << endl;
+        cout<<"Total characters: " << chars << "\n" << endl;
+
+        //getch();
+
     }
 
 
 
-
-        return 0;
-    }
+    return 0;
+}
