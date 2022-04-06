@@ -5,6 +5,7 @@ using namespace std;
 
 int main() {
     string sentence[255];
+    cout << "Enter \"stop\" to break" << endl;
 
     for (int st = 0; st < 255; st++) {
 
@@ -15,7 +16,9 @@ int main() {
         gets(ch_str);
         string str(ch_str);
         sentence[st] = str;
+        while (str != "stop") {
 
+        }
 
 
         for (i = 0; ch_str[i] != '\0'; i++){
@@ -30,7 +33,7 @@ int main() {
         cout<<"Total words: " << words << endl;
         cout<<"Total characters: " << chars << "\n" << endl;
 
-        //getch();
+
 
     }
 
