@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 
-const string FNAME "Data.dat";
+const char FNAME[] = "Data.dat";
 
 using namespace std;
 
@@ -12,7 +12,7 @@ struct products{
   char name[225];
   float unit_price;
   int quantity;
-  
+
 } product;
 
 bool stop = false;
@@ -37,7 +37,7 @@ int main() {
     cout << "[6] Fine lavoro" << endl;
     cout << ">> ";
     cin >> choice;
-    
+
     switch (choice) {
       case 1:
         file_generate();
@@ -71,23 +71,39 @@ void file_generate(){
   if (!fout) {
     cout << "Can't open Data.dat!" << endl;
   } else {
-    cout << "Archivio correttamente generato a .\"" << FNAME;
+    cout << "Archivio correttamente generato a \"..\\" << FNAME << "\"" << endl;
   }
   fout.close();
 }
 
 void file_add(){
+  cout << "Inserire il nome: "; cin >> product.name;
+  cout << "Inserire il prezzo unitario: "; cin >> product.unit_price;
+  cout << "Inserire la quantità: "; cin >> product.quantity;
 
+  ofstream fout;
+	fout.open(FNAME, ios::app | ios::binary);
+  if (!fout) {
+    cout << "Can't open Data.dat!" << endl;
+  } else {
+    fout.write((char *) &product, sizeof(product));
+    fout << "\r\n";
+    cout << "Dati inseriti correttamente" << endl;
+  }
+  fout.close();
 }
 
 //@Override
 void file_read(){
-
-}
-
-//@Override
-void file_add(){
-
+  ifstream fin;
+	fin.open("Data.dat", ios::in | ios::binary);
+  if (!fin) {
+    cout << "Can't open Data.dat!" << endl;
+  } else {
+    while (fin.eof())
+      fin.read((char *) &product, sizeof(product));
+      file_console_print();
+  }
 }
 
 //@Override
@@ -99,12 +115,9 @@ void file_find() {
 
 //@Override
 void file_console_print() {
-  cout << "\nRISULTATI RICERCA:" << endl;
-  cout << "    Codice fattura: " << voce0.CodFattura << endl;
-  cout << "    Codice cliente: " << voce0.CodCliente << endl;
-  cout << "    Data: " << voce0.Data << endl;
-  cout << "    Importo: " << voce0.Importo << endl;
-  cout << "    Pagato: " << voce0.Pagato << endl << endl;
+  cout << "\n    Nome prodotto: " << product.name << endl;
+  cout << "    Prezzo unitario: " << product.unit_price << endl;
+  cout << "    Quantità: " << product.quantity << endl;
 }
 
 //@Override
