@@ -1,128 +1,177 @@
+/*   
+ * "programma dipendenti ", 
+  sviluppato con Record e funzioni e menu
+ * a scopo didattico.
+ * Per ogni dipendente memorizza:
+ *  
+ *  ID, nome, stipendio
+ *
+ */ 
 #include <iostream>
-#include <fstream>
-#include <sstream>
+#include <iomanip>
 #include <string>
-
-const char FNAME[] = "Data.dat";
-
+#include <fstream>
 using namespace std;
 
+string nome="Test Menu";
+const string NOMEARCH = "anagrafe.dat";
 
-struct products{
-  char name[225];
-  float unit_price;
-  int quantity;
 
-} product;
 
-bool stop = false;
+struct Persona {
+	int ID; // identificativo intero va bene int se non inizia con zero altrimenti occorre array di char.
+	char nome[50]; // cognome e nome
+	double stipendio; // stipendio
+};
+Persona dipendente;
 
-void file_generate();
-void file_add();
-void file_read();
-void file_find();
-void file_console_print();
-void file_printer_print();
+//prototipi Funzioni
+string minuscolo(string s);
+int Menu();
+void Crea();
+void Aggiungi();
+void Visualizza();
+void Stampa();
+void Ricerca();
+void VisualizzaReport_cout();
+void VisualizzaReport_printf();
 
-int main() {
-  while (!stop) {
-    int choice;
+// funzione principale
+int main ()
+{
+	int scelta;
+	do {
+		scelta = Menu();
+		switch (scelta) {
+		case 1:
+			Crea();
+			break;
+		case 2:
+			Aggiungi();
+			break;
+		case 3:
+			Visualizza();
+			break;
+		case 4:
+			Stampa();
+			break;
+		case 5:
+			Ricerca();
+			break;
+		case 6:
+			cout << "fine lavoro" << endl;
+			break;
+		}
+	} while (scelta!=6);
+	return 0;
+}
+// menu delle scelte
+int Menu()
+{
+	int s;
+	cout << "--------------------------" << endl;
+	cout << "Esempio programma con menu" << endl;
+	cout << "1. Creazione archivio" << endl;
+	cout << "2. Aggiunta nuove voci" << endl;
+	cout << "3. Visualizzazione Elenco" << endl;
+	cout << "4. Stampa Elenco" << endl;
+	cout << "5. Ricerca di voci" << endl;
+	cout << "6. Fine lavoro" << endl;
+// scelta dell'utente
+	cout << "Scegli: ";
+	cin >> s;
+	cout << "--------------------------" << endl;
+	return s;
+} // Menu
+// creazione archivio
 
-    cout << "Scegliere un opzione:\n" << endl;
-    cout << "[1] Creazione archivio" << endl;
-    cout << "[2] Aggiunta nuovi record" << endl;
-    cout << "[3] Visualizzazione archivio" << endl;
-    cout << "[4] Stampa archivio" << endl;
-    cout << "[5] Ricerca di record" << endl;
-    cout << "[6] Fine lavoro" << endl;
-    cout << ">> ";
-    cin >> choice;
+// Definiamo Le funzioni
 
-    switch (choice) {
-      case 1:
-        file_generate();
-        break;
-      case 2:
-        file_add();
-        break;
-      case 3:
-        file_console_print();
-        break;
-      case 4:
-        file_printer_print();
-        break;
-      case 5:
-        file_find();
-        break;
-      case 6:
-        stop = true;
-        break;
-    }
-  }
-  return 0;
+string minuscolo(string s)
+{
+	for (unsigned i = 0; i < s.size(); ++i)
+		s[i] = tolower(s[i]);
+	return s;
 }
 
+void Crea()
+{	
+	ofstream archivio;
+	archivio.open(NOMEARCH.c_str(), ios::out | ios::binary);
+	archivio.close();
+	cout << "Nuovo archivio dipendenti creato" << endl;
+}// Crea
+// aggiunta di dati all'archivio
+void Aggiungi()
+{ 	ofstream fout;
+// aggiunge altri dati
+	fout.open("anagrafe.dat", ios::app | ios::binary);
+	if (!fout) {
+		cout << "Errore nell'apertura dell'archivio" << endl;
+	} else {
+		cout << "Matricola del dipendente (0 = fine): ";
+		cin >> dipendente.ID;
+		while (dipendente.ID != 0) {
+			cin.ignore(80, '\n');
+			cout << "Cognome e nome del dipendente: ";
+			cin.getline(dipendente.nome, 50);
+			cout << "Stipendio (euro): ";
+			cin >> dipendente.stipendio;
+			fout.write((char *) &dipendente, sizeof(dipendente));
+			cout << "Inserisci un'altra matricola (0 = fine): ";
+			cin >> dipendente.ID;
+		}
+		fout.close();
+	}
+} // Aggiungi
+// lettura dei dati dall'archivio
 
 
-//@Override
-void file_generate(){
-  ofstream fout;
-	fout.open(FNAME, ios::app | ios::binary);
-  if (!fout) {
-    cout << "Can't open Data.dat!" << endl;
-  } else {
-    cout << "Archivio correttamente generato a \"..\\" << FNAME << "\"" << endl;
-  }
-  fout.close();
+void Visualizza()
+{
+// visualizza i dipendenti registrati
+	ifstream fin;
+	fin.open("anagrafe.dat", ios::in | ios::binary);
+	if (!fin) {
+		cout << "Errore nell'apertura dell'archivio" << endl;
+	} else {
+		cout << "Elenco dipendenti registrati:" << endl;
+		while (fin.read((char *) &dipendente, sizeof(dipendente))) {
+			cout << dipendente.ID << ": "
+			     << dipendente.nome << '\t'
+			     << dipendente.stipendio << " euro"
+			     << endl;
+		}
+		fin.close();
+	}
 }
 
-void file_add(){
-  cout << "Inserire il nome: "; cin >> product.name;
-  cout << "Inserire il prezzo unitario: "; cin >> product.unit_price;
-  cout << "Inserire la quantità: "; cin >> product.quantity;
+void Stampa()
+{
+	 printf("%50s \n\n", "Stampa in due modalità  ");
+			VisualizzaReport_cout();
+			VisualizzaReport_printf();
 
-  ofstream fout;
-	fout.open(FNAME, ios::app | ios::binary);
-  if (!fout) {
-    cout << "Can't open Data.dat!" << endl;
-  } else {
-    fout.write((char *) &product, sizeof(product));
-    fout << "\r\n";
-    cout << "Dati inseriti correttamente" << endl;
-  }
-  fout.close();
+} // Stampa
+
+void Ricerca()
+{
+			cout << "Sei in Ricerca: nome="<<  nome << "; "  << endl;
+} // Ricerca
+
+void VisualizzaReport_cout()
+{
+
+	cout << "Implementa tu questa funzione aiutandoti con esempi già visti "<< endl;
+	cout << "vedi Masera_Media_alunni_con_menu.cpp vedi "<< endl;
+	// Implementa tu questa funzione aiutandoti con esempi già visti.
+	
 }
 
-//@Override
-void file_read(){
-  ifstream fin;
-	fin.open("Data.dat", ios::in | ios::binary);
-  if (!fin) {
-    cout << "Can't open Data.dat!" << endl;
-  } else {
-    while (fin.eof())
-      fin.read((char *) &product, sizeof(product));
-      file_console_print();
-  }
+void VisualizzaReport_printf()
+{
+	printf("%-50s \n", "Implementa tu questa funzione aiutandoti con esempi già visti");
+	printf("%-50s \n", "vedi Masera_Media_alunni_con_menu.cpp vedi");
+	/* Implementa tu questa funzione aiutandoti con esempi già visti.
+		*/	
 }
-
-//@Override
-void file_find() {
-  cout << "Inserire il valore da ricercare: ";
-  char token[100];
-  cin >> token;
-}
-
-//@Override
-void file_console_print() {
-  cout << "\n    Nome prodotto: " << product.name << endl;
-  cout << "    Prezzo unitario: " << product.unit_price << endl;
-  cout << "    Quantità: " << product.quantity << endl;
-}
-
-//@Override
-void file_printer_print() {
-
-}
-
-

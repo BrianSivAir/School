@@ -63,7 +63,6 @@ void write () {
     cout << "Can't open Data.dat!" << endl;
   } else {
     fout.write((char *) &voce0, sizeof(voce0));
-    fout << "\r\n";
   }
   fout.close();
 }
