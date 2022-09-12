@@ -4,19 +4,32 @@
 
 using namespace std;
 
-
 struct alunno{
     char cognome[30];
     char nome[20];
     int voto;
 };
 
+/*
+* Restituisce true se le due stringhe sono uguali.
+*/
 bool confronto(string a, string b);
 
+/*
+* Recupera il numero degli alunni da console.
+* Questo deve essere maggiore di zero e minore della costante MAX.
+*/
 int controllo_numAlunni();
 
+/*
+* Recupera n alunni da console.
+*/
 void input(alunno a[], int n);
 
+/*
+* Trova l'alunno che ha come cognome il valore di cercaCognome
+* e stampa la sua posizione nell'array, il suo nome e il voto.
+*/
 void ricerca(alunno a[], int n, string cercaCognome);
 
 
@@ -80,7 +93,7 @@ void ricerca(alunno a[], int n, string cercaCognome) {
     int trovato;
     cout << "\nInserisci il cognome dell'alunno da cercare: ";
     cin >> cerca;
-    trovato = 0 ;
+    trovato = 0;
     for (int j = 0 ; j < n ; j ++ ) {
         if (confronto(a[j].cognome, cerca)) {
             cout << " \nAlunno trovato in posizione " << j+1 << " " << a[j].nome << " " << a[j].voto ;
